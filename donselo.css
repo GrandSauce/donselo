@@ -1,0 +1,15 @@
+header {
+    color: red;
+    text-align: center;
+    font: comic-sans;
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+}
+
+body {
+    background-color: green;
+}
+
+button {
+    color: red;
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+}
