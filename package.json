@@ -1,0 +1,12 @@
+{
+  "type": "module",
+  "name": "your-project-name",
+  "version": "1.0.0",
+  "main": "donselo.js",
+  "scripts": {
+    "start": "node donselo.js"
+  },
+  "dependencies": {
+    "firebase": "^10.12.1"
+  }
+}
