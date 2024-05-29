@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import firebase from "firebase/compat";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -16,12 +17,13 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
+const db = firebase.firestore();
 
-// Reference to your collection
-const collectionRef = collection(firestore, 'PLAYER');
+async function getData(COLLECTION) {
+    // Reference to your collection
+    const collectionRef = collection(firestore, COLLECTION);
 
-// Read data
-const fetchData = async () => { // MAKE THIS TAKE IN THE COLLECTION AS A VARIABLE
+    // Fetch data
     try {
         const querySnapshot = await getDocs(collectionRef);
         const data = [];
@@ -30,18 +32,35 @@ const fetchData = async () => { // MAKE THIS TAKE IN THE COLLECTION AS A VARIABL
         });
         return data;
     } catch (error) {
+        console.error("Error fetching data:", error);
         throw error;
     }
-};
+}
 
+// THIS DOESN'T WORK YET
+async function updateELO() {
+    const docId = "iddsB7f04TOBBaZvlu1h";
+    const fieldName = "ELO";
+    const newValue = 2000;
+
+    const docRef = doc(db, 'your-collection-name', docId);
+    await updateDoc(docRef, {
+        [fieldName]: newValue
+    });
+
+    console.log('Document successfully updated!');
+}
+//updateELO().catch(console.error);
+
+// Printing it all
 (async () => {
     try {
-        const data = await fetchData();
-        console.log("Data:", data);
+        const playerData = await getData('PLAYER');
+        console.log("Player Data:", playerData);
+
+        const gameData = await getData('GAME');
+        console.log("Game Data:", gameData);
     } catch (error) {
         console.error("Error:", error);
-    }finally {
-        // Manually exit the Node.js process
-        process.exit();
     }
 })();
