@@ -19,6 +19,7 @@ const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 const db = firebase.firestore();
 
+// Gets all the data from a collection. Returns as a set of dictionaries
 async function getData(COLLECTION) {
     // Reference to your collection
     const collectionRef = collection(firestore, COLLECTION);
