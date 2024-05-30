@@ -1,7 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, doc, updateDoc } from "firebase/firestore";
-import firebase from "firebase/compat";
+import { getFirestore, collection, doc, addDoc, getDoc, updateDoc } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -16,52 +15,132 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const firestore = getFirestore(app);
-const db = firebase.firestore();
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app);
 
-// Gets all the data from a collection. Returns as a set of dictionaries
-async function getData(COLLECTION) {
-    // Reference to your collection
-    const collectionRef = collection(firestore, COLLECTION);
+// USEFUL FUNCTIONS
+// _____________________________________________________________________________________________________________________
 
-    // Fetch data
+// Creates a new player with the given first and last name, sets ELO to 1000 and games played to 0
+// Returns nothing
+async function newPlayer(firstName, lastName) {
     try {
-        const querySnapshot = await getDocs(collectionRef);
-        const data = [];
-        querySnapshot.forEach(doc => {
-            data.push({ id: doc.id, ...doc.data() });
+        const docRef = await addDoc(collection(db, "PLAYER"), {
+            FIRST_NAME: firstName,
+            LAST_NAME: lastName,
+            ELO: 1000,
+            GAMES_PLAYED: 0
         });
-        return data;
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        throw error;
+        console.log("New player added: ");
+        console.log("ID: ", docRef.id);
+        console.log("Name: ", firstName, " ", lastName);
+    } catch (e) {
+        console.error("Error adding the new player: ", e);
     }
 }
 
-// THIS DOESN'T WORK YET
-async function updateELO() {
-    const docId = "iddsB7f04TOBBaZvlu1h";
-    const fieldName = "ELO";
-    const newValue = 2000;
+// Updates the ELOs of both players (currently winner + 50, loser - 50) and adds 1 to their games played
+function updateEloAndGamesPlayed(winnerId, loserId){
+    (async () => {
+        const winnerData = await readPlayer(winnerId);
+        const loserData = await readPlayer(loserId);
 
-    const docRef = doc(db, 'your-collection-name', docId);
-    await updateDoc(docRef, {
-        [fieldName]: newValue
-    });
+        if (winnerData && loserData) {
+            console.log("Winner Data Before Calculations:", winnerData);
+            console.log("Loser Data Before Calculation:", loserData);
 
-    console.log('Document successfully updated!');
+            // Perform calculations
+            const currentEloWinner = winnerData.ELO;
+            const gamesPlayedWinner = winnerData.GAMES_PLAYED;
+
+            const currentEloLoser = loserData.ELO;
+            const gamesPlayedLoser = loserData.GAMES_PLAYED;
+
+            // Example calculation: increase ELO by 50 points
+            const newEloWinner = currentEloWinner + 50;
+            const newEloLoser = currentEloLoser - 50;
+
+            const newGamesPlayedWinner = gamesPlayedWinner + 1;
+            const newGamesPlayedLoser = gamesPlayedLoser + 1;
+
+
+            // Update the player's ELO in Firestore
+            await updatePlayerElo(winnerId, newEloWinner);
+            await updatePlayerElo(loserId, newEloLoser);
+
+            // Update the player's GAMES_PLAYED in Firestore
+            await updateGamesPlayed(winnerId, newGamesPlayedWinner);
+            await updateGamesPlayed(loserId, newGamesPlayedLoser);
+        }
+    })();
 }
-//updateELO().catch(console.error);
 
-// Printing it all
-(async () => {
+
+
+
+
+// HELPER FUNCTIONS
+// _____________________________________________________________________________________________________________________
+
+// Function to update player's games played
+async function updateGamesPlayed(id, newGamesPlayed) {
     try {
-        const playerData = await getData('PLAYER');
-        console.log("Player Data:", playerData);
-
-        const gameData = await getData('GAME');
-        console.log("Game Data:", gameData);
-    } catch (error) {
-        console.error("Error:", error);
+        const playerRef = doc(db, "PLAYER", id);
+        await updateDoc(playerRef, {
+            GAMES_PLAYED: newGamesPlayed
+        });
+        console.log(id, " GAMES_PLAYED updated to: ", newGamesPlayed);
+    } catch (e) {
+        console.error("Error updating player GAMES_PLAYED: ", e);
     }
-})();
+}
+
+// Function to update player's ELO
+async function updatePlayerElo(id, newElo) {
+    try {
+        const playerRef = doc(db, "PLAYER", id);
+        await updateDoc(playerRef, {
+            ELO: newElo
+        });
+        console.log(id, " ELO updated to:", newElo);
+    } catch (e) {
+        console.error("Error updating player ELO: ", e);
+    }
+}
+
+// Prints a player's information
+function printPlayer(id){
+    (async () => {
+        const playerElo = await readPlayer(id);
+        if (playerElo) {
+            console.log("Player ELO:", playerElo);
+        }
+    })();
+}
+
+// Function to read player's info by document ID (you have to do some fancy asynchronous stuff to use the values I think)
+async function readPlayer(id) {
+    try {
+        const docRef = doc(db, "PLAYER", id);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            return docSnap.data();
+        } else {
+            // docSnap.data() will be undefined in this case
+            console.log("Could not find a player with that id");
+            return null;
+        }
+    } catch (e) {
+        console.error("Error reading player ELO: ", e);
+        return null;
+    }
+}
+
+
+
+
+
+// TESTING
+// _____________________________________________________________________________________________________________________
+updateEloAndGamesPlayed("iddsB7f04TOBBaZvlu1h", "lQz872i4CSaUOIyuBkUU");
