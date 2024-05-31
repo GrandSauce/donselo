@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter A Game</title>
+    <link rel="stylesheet" href="donselo.css">
+</head>
+<body>
+<header>
+    <h1>Enter A Game</h1>
+</header>
+
+<form action="donselo.html" style="text-align: center;">
+    <button type="submit">Go To Home Page</button>
+</form>
+<header>
+    <h2>Enter The Winner And Loser</h2>
+</header>
+
+<div style="text-align: center;">
+    <label for="winner" >Winner:</label>
+
+    <select id="winner" name="winner" >
+
+    </select>
+</div>
+<div style="text-align: center;">
+    <label for="loser" >Loser:</label>
+
+    <select id="loser" name="loser" >
+
+    </select>
+</div>
+
+<script type = "module" src="calculations.js"></script>
+<script type = "module" src="winnerLoserOptions.js"></script>
+
+<!-- THIS ISNT WORKING. SUBMITGAME NOT DEFINED APPARENTLY -->
+<div style="text-align: center;">
+    <button onclick="submitGame()">TEST</button>
+</div>
+
+<form action="submitted.html" style="text-align: center;">
+    <button onclick = submitGame() type="submit">Submit</button>
+</form>
+
+
+</body>
+</html>

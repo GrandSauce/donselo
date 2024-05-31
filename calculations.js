@@ -1,10 +1,12 @@
 // Import the functions you need from the SDKs you need
+
 // THESE LINK MIGHT BE OUT OF DATE (FROM CHATGPT)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-import { getFirestore, collection, doc, addDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+import { getFirestore, collection, doc, addDoc, getDoc, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+
 // THE FOLLOWING IS WHAT IT SAID WE SHOULD USE
-// import { initializeApp } from "firebase/app";
-// import { getFirestore, collection, doc, addDoc, getDoc, updateDoc } from "firebase/firestore";
+//import { initializeApp } from "firebase/app";
+//import { getFirestore, collection, doc, addDoc, getDoc, updateDoc, getDocs } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -47,6 +49,15 @@ async function newPlayer(firstName, lastName) {
     }
 }
 
+// Submits the game to the database
+export function submitGame(){
+    // Get the selected value from the dropdown
+    const winner = document.getElementById("winner").value;
+    const loser = document.getElementById("loser").value;
+
+    // Call your function with the selected value
+    updateEloAndGamesPlayed(winner, loser);
+}
 // Updates the ELOs of both players (currently winner + 50, loser - 50) and adds 1 to their games played
 function updateEloAndGamesPlayed(winnerId, loserId){
     (async () => {
@@ -85,6 +96,26 @@ function updateEloAndGamesPlayed(winnerId, loserId){
 
 
 
+// Reads all Players in the database
+// Returns as a sorted list of lists [id, first name, last name, elo, games played]
+export async function readAllPlayers() {
+    try {
+        const idList = await getAllIds();
+        const listOfNamesAndElos = [];
+        for (const id of idList) {
+            const player = await readPlayer(id);
+            if (player) {
+                listOfNamesAndElos.push([id, player.FIRST_NAME, player.LAST_NAME, player.ELO, player.GAMES_PLAYED]);
+            }
+        }
+        listOfNamesAndElos.sort((a, b) => b[3] - a[3]);
+        console.log(listOfNamesAndElos);
+        return listOfNamesAndElos;
+    } catch (e) {
+        console.error("Error reading all ELOs: ", e);
+        return [];
+    }
+}
 
 
 // HELPER FUNCTIONS
@@ -146,7 +177,7 @@ async function readPlayer(id) {
 }
 
 // Function to read player's ELO
-export async function readElo(id) {
+async function readElo(id) {
     const player = await readPlayer(id);
     if (player) {
         return player['ELO'];
@@ -155,8 +186,41 @@ export async function readElo(id) {
     }
 }
 
+// Function to get all the Ids of all the players, returns as an array
+async function getAllIds() {
+    try {
+        const querySnapshot = await getDocs(collection(db, "PLAYER"));
+        const allIds = [];
+        querySnapshot.forEach((doc) => {
+            allIds.push(String(doc.id));
+        });
+        console.log(allIds);
+        return allIds;
+    } catch (e) {
+        console.error("Error getting all IDs: ", e);
+        return [];
+    }
+}
+
+// Returns all the player names and elos as a big string (not very useful)
+async function printAllElos() {
+    let bigString = "";
+    try {
+        let allPlayers = await readAllPlayers(); // Await the asynchronous function
+        for (const player of allPlayers) { // Use 'const' or 'let' to declare the variable
+            bigString += `${player[1]} ${player[2]} ELO: ${player[3]}\n`; // Use template literals for better readability
+        }
+    } catch (error) {
+        console.error("Error printing all ELOs:", error);
+    }
+    console.log(bigString);
+    return bigString;
+}
+
+
 
 // TESTING
 // _____________________________________________________________________________________________________________________
 // updateEloAndGamesPlayed("iddsB7f04TOBBaZvlu1h", "lQz872i4CSaUOIyuBkUU");
 // readElo("iddsB7f04TOBBaZvlu1h");
+
