@@ -1,6 +1,10 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, doc, addDoc, getDoc, updateDoc } from "firebase/firestore";
+// THESE LINK MIGHT BE OUT OF DATE (FROM CHATGPT)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+import { getFirestore, collection, doc, addDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+// THE FOLLOWING IS WHAT IT SAID WE SHOULD USE
+// import { initializeApp } from "firebase/app";
+// import { getFirestore, collection, doc, addDoc, getDoc, updateDoc } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -17,6 +21,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
+
+
+
+
 
 // USEFUL FUNCTIONS
 // _____________________________________________________________________________________________________________________
@@ -137,10 +145,18 @@ async function readPlayer(id) {
     }
 }
 
-
-
+// Function to read player's ELO
+export async function readElo(id) {
+    const player = await readPlayer(id);
+    if (player) {
+        return player['ELO'];
+    } else {
+        return null;
+    }
+}
 
 
 // TESTING
 // _____________________________________________________________________________________________________________________
-updateEloAndGamesPlayed("iddsB7f04TOBBaZvlu1h", "lQz872i4CSaUOIyuBkUU");
+// updateEloAndGamesPlayed("iddsB7f04TOBBaZvlu1h", "lQz872i4CSaUOIyuBkUU");
+// readElo("iddsB7f04TOBBaZvlu1h");
