@@ -28,5 +28,4 @@ window.onload = populatePlayers;
 document.addEventListener('DOMContentLoaded', function() {
     var button = document.getElementById('submitGameButton');
     button.addEventListener('click', submitGame);
-
 });

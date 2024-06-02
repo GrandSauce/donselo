@@ -33,7 +33,12 @@ const db = getFirestore(app);
 
 // Creates a new player with the given first and last name, sets ELO to 1000 and games played to 0
 // Returns nothing
-async function newPlayer(firstName, lastName) {
+export async function newPlayer(event) {
+    event.preventDefault();
+    let fName = document.getElementById('fname');
+    let firstName = fName.value;
+    let lName = document.getElementById('lname');
+    let lastName = lName.value;
     try {
         const docRef = await addDoc(collection(db, "PLAYER"), {
             FIRST_NAME: firstName,
@@ -44,8 +49,10 @@ async function newPlayer(firstName, lastName) {
         console.log("New player added: ");
         console.log("ID: ", docRef.id);
         console.log("Name: ", firstName, " ", lastName);
+        alert("New Player added");
     } catch (e) {
         console.error("Error adding the new player: ", e);
+        alert("That didn't work! Talk to Hugh or Sam");
     }
 }
 

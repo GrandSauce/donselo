@@ -10,16 +10,20 @@
     <h1>DONSELO.COM</h1>
 </header>
 <body>
-<p> Add new player:</p>
+<form action="donselo.html" style="text-align: center;">
+    <button type="submit">Go To Home Page</button>
+</form>
+<p style="text-align: center;"> Add new player:</p>
 
-<form>
+<form id="playerForm" style="text-align: center;">
     <label for="fname">First Name: </label><br>
     <input type="text" id="fname" name="fname"> <br>
     <label for="lname"> Last Name: </label><br>
     <input type="text" id="lname" name="lname"><br>
-    <button onclick="newPlayer(document.getElementById('fname'),document.getElementById('lname'))">Submit</button>
+    <button type="submit" >Submit</button>
 </form>
 
 <script type="module" src="calculations.js"></script>
+<script type="module" src="newPlayerPage.js"></script>
 </body>
 </html>
