@@ -57,6 +57,7 @@ export function submitGame(){
 
     // Call your function with the selected value
     updateEloAndGamesPlayed(winner, loser);
+    alert("Game submitted successfully");
 }
 // Updates the ELOs of both players (currently winner + 50, loser - 50) and adds 1 to their games played
 function updateEloAndGamesPlayed(winnerId, loserId){
@@ -75,9 +76,16 @@ function updateEloAndGamesPlayed(winnerId, loserId){
             const currentEloLoser = loserData.ELO;
             const gamesPlayedLoser = loserData.GAMES_PLAYED;
 
+            // K-factor
+            const k = 32;
+
+            // Expected scores
+            const eScoreWinner = 1 / (1 + Math.pow(10, (currentEloLoser - currentEloWinner) / 400));
+            const eScoreLoser = 1 / (1 + Math.pow(10, (currentEloWinner - currentEloLoser) / 400));
+
             // Example calculation: increase ELO by 50 points
-            const newEloWinner = currentEloWinner + 50;
-            const newEloLoser = currentEloLoser - 50;
+            const newEloWinner = Math.round(currentEloWinner + (k * (1 - eScoreWinner)));
+            const newEloLoser = Math.round(currentEloLoser + (k * (0 - eScoreLoser)));
 
             const newGamesPlayedWinner = gamesPlayedWinner + 1;
             const newGamesPlayedLoser = gamesPlayedLoser + 1;
