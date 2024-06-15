@@ -56,6 +56,20 @@ export async function newPlayer(event) {
     }
 }
 
+// Creates a new game data thing that stores the winner and loser and time
+// Returns nothing
+async function newGame(winner, loser) {
+    try {
+        const docRef = await addDoc(collection(db, "GAME"), {
+            WINNER: winner,
+            LOSER: loser,
+            TIME: new Date().toLocaleString(),
+        });
+    } catch (e) {
+        console.error("Error adding the new game: ", e);
+    }
+}
+
 // Submits the game to the database
 export function submitGame(){
     // Get the selected value from the dropdown
@@ -64,6 +78,7 @@ export function submitGame(){
 
     // Call your function with the selected value
     updateEloAndGamesPlayed(winner, loser);
+    newGame(winner, loser);
     alert("Game submitted successfully");
 }
 // Updates the ELOs of both players (currently winner + 50, loser - 50) and adds 1 to their games played
@@ -238,4 +253,4 @@ async function printAllElos() {
 // _____________________________________________________________________________________________________________________
 // updateEloAndGamesPlayed("iddsB7f04TOBBaZvlu1h", "lQz872i4CSaUOIyuBkUU");
 // readElo("iddsB7f04TOBBaZvlu1h");
-
+newGame("Test winner", "Test loser");
