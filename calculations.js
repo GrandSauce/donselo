@@ -253,4 +253,4 @@ async function printAllElos() {
 // _____________________________________________________________________________________________________________________
 // updateEloAndGamesPlayed("iddsB7f04TOBBaZvlu1h", "lQz872i4CSaUOIyuBkUU");
 // readElo("iddsB7f04TOBBaZvlu1h");
-newGame("Test winner", "Test loser");
+// newGame("Test winner", "Test loser");
