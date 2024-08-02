@@ -7,6 +7,8 @@ header {
 
 body {
     background-color: green;
+    margin : 0;
+    padding: 0;
 }
 
 button {
@@ -18,6 +20,10 @@ button {
     width: 100%;
     text-align: center;
     background-color: red;
+    border-style: solid;
+    border-color: black;
+    border-right-color: red;
+    border-left-color: red;
 }
 
 #eloScore {
@@ -38,5 +44,15 @@ button {
 
 #guts{
     width: 100%;
+}
+
+#gameTable{
+    width: 100%;
+    text-align: center;
+}
+
+#gameSelect{
+    width: 100%;
+    text-align: center;
 }
 

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENTER A GAME</title>
+    <link rel="stylesheet" href="donselo.css">
+</head>
+<body>
+<header>
+    <h1>Enter A Game</h1>
+</header>
+
+<form action="index.html" style="text-align: center;">
+    <button type="submit">Go To Home Page</button>
+</form>
+<header>
+    <h2>Enter The Winning Team And Losing Team</h2>
+</header>
+
+<table id="gameTable">
+    <tr>
+        <td>
+            Winners
+        </td>
+
+        <td>
+            Losers
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <div style="text-align: center;">
+                <label for="winner1" >Player 1:</label>
+
+                <select id="winner1" name="winner1" >
+
+                </select>
+            </div>
+        </td>
+        <td>
+            <div style="text-align: center;">
+                <label for="loser1" >Player 1:</label>
+
+                <select id="loser1" name="loser1" >
+
+                </select>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div style="text-align: center;">
+                <label for="winner2" >Player 2:</label>
+
+                <select id="winner2" name="winner2" >
+
+                </select>
+            </div>
+        </td>
+        <td>
+            <div style="text-align: center;">
+                <label for="loser2" >Player 2:</label>
+
+                <select id="loser2" name="loser2" >
+
+                </select>
+            </div>
+        </td>
+    </tr>
+
+</table>
+
+
+
+<script type = "module" src="calculations.js">
+</script>
+<script type = "module" src="DoublesWinnerLoserOptions.js"></script>
+
+
+<div style="text-align: center;">
+    <button id = 'submitGameButton'>SUBMIT</button>
+</div>
+
+
+</body>
+</html>

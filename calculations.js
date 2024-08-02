@@ -70,6 +70,21 @@ async function newGame(winner, loser) {
     }
 }
 
+async function newDoublesGame(winner1, winner2, loser1, loser2) {
+    try {
+        const docRef = await addDoc(collection(db, "GAME"), {
+            WINNER1: winner1,
+            WINNER2: winner2,
+
+            LOSER1: loser1,
+            LOSER2: loser2,
+            TIME: new Date().toLocaleString(),
+        });
+    } catch (e) {
+        console.error("Error adding the new game: ", e);
+    }
+}
+
 // Submits the game to the database
 export function submitGame(){
     // Get the selected value from the dropdown
@@ -80,6 +95,20 @@ export function submitGame(){
     updateEloAndGamesPlayed(winner, loser);
     newGame(winner, loser);
     alert("Game submitted successfully");
+    window.location.href = "index.html";
+}
+
+export function submitDoublesGame(){
+    const winner1 = document.getElementById("winner1").value;
+    const winner2 = document.getElementById("winner2").value;
+    const loser1 = document.getElementById("loser1").value;
+    const loser2 = document.getElementById("loser2").value;
+
+    updateDoublesEloAndGamesPlayed(winner1, winner2, loser1, loser2);
+    newDoublesGame(winner1, winner2, loser1, loser2);
+    alert("Game submitted successfully");
+    window.location.href = "index.html";
+
 }
 // Updates the ELOs of both players (currently winner + 50, loser - 50) and adds 1 to their games played
 function updateEloAndGamesPlayed(winnerId, loserId){
@@ -120,6 +149,68 @@ function updateEloAndGamesPlayed(winnerId, loserId){
             // Update the player's GAMES_PLAYED in Firestore
             await updateGamesPlayed(winnerId, newGamesPlayedWinner);
             await updateGamesPlayed(loserId, newGamesPlayedLoser);
+        }
+    })();
+}
+
+function updateDoublesEloAndGamesPlayed(winner1,winner2,loser1,loser2){
+    (async () => {
+        const winner1Data = await readPlayer(winner1);
+        const winner2Data = await readPlayer(winner2);
+
+        const loser1Data = await readPlayer(loser1);
+        const loser2Data = await readPlayer(loser2);
+
+
+        if (winner1Data && winner2Data && loser2Data && loser1Data) {
+
+            // Perform calculations
+            const currentEloWinner1 = winner1Data.ELO;
+            const gamesPlayedWinner1 = winner1Data.GAMES_PLAYED;
+
+            const currentEloWinner2 = winner2Data.ELO;
+            const gamesPlayedWinner2 = winner2Data.GAMES_PLAYED;
+
+            const currentEloLoser1 = loser1Data.ELO;
+            const gamesPlayedLoser1 = loser1Data.GAMES_PLAYED;
+
+            const currentEloLoser2 = loser2Data.ELO;
+            const gamesPlayedLoser2 = loser2Data.GAMES_PLAYED;
+
+            const currentEloLoser = (currentEloLoser1 + currentEloLoser2)/2;
+            const currentEloWinner = (currentEloWinner2 + currentEloWinner1)/2;
+
+            // K-factor
+            const k = 32;
+
+            // Expected scores
+            const eScoreWinner = 1 / (1 + Math.pow(10, (currentEloLoser - currentEloWinner) / 400));
+            const eScoreLoser = 1 / (1 + Math.pow(10, (currentEloWinner - currentEloLoser) / 400));
+
+            // Example calculation: increase ELO by 50 points
+            const newEloWinner1 = Math.round(currentEloWinner1 + (k * (1 - eScoreWinner)));
+            const newEloWinner2 = Math.round(currentEloWinner2 + (k * (1 - eScoreWinner)));
+
+            const newEloLoser1 = Math.round(currentEloLoser1 + (k * (0 - eScoreLoser)));
+            const newEloLoser2 = Math.round(currentEloLoser2 + (k * (0 - eScoreLoser)));
+
+            const newGamesPlayedWinner1 = gamesPlayedWinner1 + 1;
+            const newGamesPlayedLoser1 = gamesPlayedLoser1 + 1
+            const newGamesPlayedWinner2 = gamesPlayedWinner2 + 1;
+            const newGamesPlayedLoser2 = gamesPlayedLoser2 + 1;
+
+
+            // Update the player's ELO in Firestore
+            await updatePlayerElo(winner1, newEloWinner1);
+            await updatePlayerElo(loser1, newEloLoser1);
+            await updatePlayerElo(winner2, newEloWinner2);
+            await updatePlayerElo(loser2, newEloLoser2);
+
+            // Update the player's GAMES_PLAYED in Firestore
+            await updateGamesPlayed(winner1, newGamesPlayedWinner1);
+            await updateGamesPlayed(loser1, newGamesPlayedLoser1);
+            await updateGamesPlayed(winner2, newGamesPlayedWinner2);
+            await updateGamesPlayed(loser2, newGamesPlayedLoser2);
         }
     })();
 }
