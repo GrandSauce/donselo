@@ -14,6 +14,12 @@ button {
     font-family: 'Comic Sans MS', 'Comic Sans', cursive;
 }
 
+#topBar{
+    width: 100%;
+    text-align: center;
+    background-color: red;
+}
+
 #eloScore {
     text-align: center;
     font-family: comic-sans;
@@ -21,8 +27,16 @@ button {
 }
 
 #data {
-    text-align: center;
+    text-align: left;
     font-family: comic-sans;
     font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    border-style: solid;
+    max-width: 30vw;
+    background-color: #ffa100;
+    border-radius: 5px;
+}
+
+#guts{
+    width: 100%;
 }
 
