@@ -2,7 +2,7 @@ header {
     color: red;
     text-align: center;
     font-family: comic-sans;
-    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
 }
 
 body {
@@ -12,18 +12,45 @@ body {
 }
 
 button {
-    color: red;
-    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    width: 100%;
+    max-width: 150px;
+    color: darkgray;
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
+    padding: 10px 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: large;
+    cursor: pointer;
+    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    background: #007bff;
+
+
+}
+
+button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 16px 18px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+    background-color: #004085;
+    transform: scale(0.95);
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* Blue outline for focus */
+
 }
 
 #topBar{
     width: 100%;
     text-align: center;
-    background-color: red;
+    background-color: orangered;
     border-style: solid;
     border-color: black;
-    border-right-color: red;
-    border-left-color: red;
+
 }
 
 #eloScore {
@@ -54,5 +81,13 @@ button {
 #gameSelect{
     width: 100%;
     text-align: center;
+}
+
+#enterGame {
+    color: white;
+    font-family: comic-sans;
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+
+
 }
 
