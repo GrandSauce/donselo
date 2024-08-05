@@ -13,7 +13,7 @@ html, body {
     padding: 0;
 
     /* Apply the gradient background */
-    background: linear-gradient(to bottom, green, darkgreen);
+    background: linear-gradient(to bottom, green, 	#002D04);
 }
 
 
