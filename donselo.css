@@ -5,13 +5,26 @@ header {
     font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
 }
 
+
+html, body {
+    /* Ensure both html and body elements cover the entire viewport */
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+    /* Apply the gradient background */
+    background: linear-gradient(to bottom, green, darkgreen);
+}
+
+
 body {
-    background-color: green;
+    min-height: 100vh;
     margin : 0;
     padding: 0;
 }
 
 button {
+    margin : 0;
     width: 100%;
     max-width: 150px;
     color: darkgray;
@@ -40,7 +53,7 @@ button:active {
 
 button:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* Blue outline for focus */
+    box-shadow: rgba(61, 61, 61, 0.10) 0 16px 18px;
 
 }
 
@@ -50,7 +63,7 @@ button:focus {
     background-color: orangered;
     border-style: solid;
     border-color: black;
-
+    box-shadow: rgba(61, 61, 61, 0.74) 1px 1px 1px;
 }
 
 #eloScore {
